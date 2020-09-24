@@ -26,81 +26,83 @@ c) correct answer
 11. Display the score in the console.
 */
 
-(function() {
-    function Question(question, answers, correct) {
-        this.question = question;
-        this.answers = answers;
-        this.correct = correct;
-    }
+(() => {
+    class Question {
+        constructor(question, answers, correct) {
+            this.question = question;
+            this.answers = answers;
+            this.correct = correct;
+        }
 
-    Question.prototype.displayQuestion = function() {
-        console.log(this.question);
+        displayQuestion() {
+            console.log(this.question);
 
-        for (var i = 0; i < this.answers.length; i++) {
-            console.log(i + ': ' + this.answers[i]);
+            for (let i = 0; i < this.answers.length; i++) {
+                console.log(`${i}: ${this.answers[i]}`);
+            }
+        }
+
+        checkAnswer(ans, callback) {
+            let sc;
+            
+            if (ans === this.correct) {
+                console.log('Correct answer!');
+                sc = callback(true);
+            } else {
+                console.log('Wrong answer. Try again :)');
+                sc = callback(false);
+            }
+            
+            this.displayScore(sc);
+        }
+
+        displayScore(score) {
+            console.log(`Your current score is: ${score}`);
+            console.log('------------------------------');
         }
     }
 
-    Question.prototype.checkAnswer = function(ans, callback) {
-        var sc;
-        
-        if (ans === this.correct) {
-            console.log('Correct answer!');
-            sc = callback(true);
-        } else {
-            console.log('Wrong answer. Try again :)');
-            sc = callback(false);
-        }
-        
-        this.displayScore(sc);
-    }
 
-    Question.prototype.displayScore = function(score) {
-        console.log('Your current score is: ' + score);
-        console.log('------------------------------');
-    }
-    
-    
-    var q1 = new Question('Entomology is the science that studies:',
+    const q1 = new Question('Entomology is the science that studies:',
                           ['Behavior of human beings', 'Insects', 'The formation of rocks'],
                           1);
 
-    var q2 = new Question('Which is the longest river in the world?',
+    const q2 = new Question('Which is the longest river in the world?',
                           ['Nile', 'Mississippi', 'Amazon'],
                           2);
 
-    var q3 = new Question('Germany signed the Armistice Treaty on ____ and World War I ended',
+    const q3 = new Question('Germany signed the Armistice Treaty on ____ and World War I ended',
                           ['January 19, 1918', 'May 30, 1918', 'November 11, 1918', 'February 15, 1918'],
                           2);
 
-    var q4 = new Question('Headquarters of UNO are located in:',
+    const q4 = new Question('Headquarters of UNO are located in:',
                           ['New York', 'Hague', 'Geneva', 'Brussels'],
                           0);
 
-    var q5 = new Question('For seeing objects at the surface of water from a submarine under water, the instrument used is',
+    const q5 = new Question('For seeing objects at the surface of water from a submarine under water, the instrument used is',
                           ['Telescope', 'Spectroscope', 'Periscope', 'Kaleidoscope'],
-                          3);                    
+                          3);
 
-    var questions = [q1, q2, q3, q4, q5];
-    
+    const questions = [q1, q2, q3, q4, q5];
+
     function score() {
-        var sc = 0;
-        return function(correct) {
+        let sc = 0;
+        return correct => {
             if (correct) {
                 sc++;
             }
             return sc;
-        }
+        };
     }
-    var keepScore = score();
-    
-    
+    const keepScore = score();
+
+
     function nextQuestion() {
 
-        var n = Math.floor(Math.random() * questions.length);
+        const n = Math.floor(Math.random() * questions.length);
         questions[n].displayQuestion();
 
-        var answer = prompt('Please select the correct answer.');
+        const answer = prompt('Please select the correct answer.');
 
         if(answer !== 'exit') {
             questions[n].checkAnswer(parseInt(answer), keepScore);
@@ -108,7 +110,6 @@ c) correct answer
             nextQuestion();
         }
     }
-    
+
     nextQuestion();
-    
 })();
